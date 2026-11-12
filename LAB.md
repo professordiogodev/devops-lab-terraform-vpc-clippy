@@ -2,9 +2,11 @@
 
 ## The situation
 
-Clippy needs a staging server so the team can test releases before customers see them. Last quarter somebody built one by clicking through the console. Then that person went on holiday, a disk filled up and nobody could rebuild it: nobody knew which subnet, which security group rules, which image or which commands had been used.
+**Fire drill.** The staging server is gone, and the person who built it is on holiday.
 
-You will write the staging environment as Terraform, so that it can be created, destroyed and created again **identically**, by anyone, with one command. The real test of Infrastructure as Code is not that it works once. It is that you can delete everything and get it back.
+Last quarter somebody built Clippy's staging environment by clicking through the console. A disk filled up, nobody could rebuild it, and nobody knew which subnet, which security group rules, which image or which commands had been used. The team cannot test releases before customers see them.
+
+The drill is simple: write the staging environment as Terraform so that it can be created, destroyed and created again **identically**, by anyone, with one command. The real test of Infrastructure as Code is not that it works once. It is that you can delete everything and get it back.
 
 > **Your mission**
 > - Write the network: a VPC, an internet gateway and **two public subnets in two availability zones** (without copy-pasting a block)
