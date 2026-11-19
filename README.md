@@ -39,6 +39,10 @@ The drill is simple: write the staging environment as Terraform so that it can b
 
 **Time:** 90-105 min | **Cost:** free tier, a few cents | **You need:** an AWS administrator user, the AWS CLI v2, Terraform 1.10 or newer, git, curl and a terminal. Everything uses `us-east-1`.
 
+> [!NOTE]
+> **Note** You share one AWS account with your whole class, so every resource this lab creates carries a `student` tag with your **handle**: your IAM user name in lowercase (`.lab/handle.sh` prints it). The provided `data "external"` block in `terraform/main.tf` adds the tag for you, so leave it alone. The checks and the teardown proof only look at resources with your handle, and never touch your classmates'.
+
+
 <p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 ## Part 0 - Look before you write

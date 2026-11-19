@@ -14,6 +14,7 @@ def check(desc, ok, hint=""):
 
 
 def aws(*a):
+    a = tuple(p for x in a for p in (x.split(" ") if x.startswith("Name=tag:lab,") else (x,)))  # F holds two filters: lab and student
     try:
         return json.loads(subprocess.check_output(("aws",) + a + ("--output", "json"), stderr=subprocess.DEVNULL, timeout=60) or "null")
     except Exception:
@@ -25,7 +26,9 @@ def sh(c, env=None):
     return r.returncode, r.stdout
 
 
-F = "Name=tag:lab,Values=terraform-vpc-clippy"
+STUDENT = subprocess.run(["bash", os.path.join(ROOT, ".lab", "handle.sh")], capture_output=True, text=True).stdout.strip()
+print("Your handle (from your IAM user name): " + STUDENT)
+F = "Name=tag:lab,Values=terraform-vpc-clippy" + " Name=tag:student,Values=" + STUDENT
 print("== Your code ==")
 tf = sh("cat terraform/*.tf")[1]
 check("terraform fmt -check is clean", sh("terraform -chdir=terraform fmt -check")[0] == 0, "terraform -chdir=terraform fmt")

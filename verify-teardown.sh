@@ -6,12 +6,14 @@ echo "Checking account $ACCOUNT, region $(aws configure get region)"
 pass=0; failn=0
 check() { local d="$1"; shift; if "$@" >/dev/null 2>&1; then echo "PASS  $d"; pass=$((pass+1)); else echo "FAIL  $d"; failn=$((failn+1)); fi; }
 empty() { local r; r=$(eval "$1" 2>/dev/null); [ -z "$r" ] || [ "$r" = None ]; }
-T="Name=tag:lab,Values=terraform-vpc-clippy"
-check "no running EC2 instance tagged lab=terraform-vpc-clippy" empty "aws ec2 describe-instances --filters $T Name=instance-state-name,Values=pending,running,stopping,stopped --query 'Reservations[].Instances[].InstanceId' --output text"
-check "no VPC tagged lab=terraform-vpc-clippy" empty "aws ec2 describe-vpcs --filters $T --query 'Vpcs[].VpcId' --output text"
-check "no internet gateway tagged lab=terraform-vpc-clippy" empty "aws ec2 describe-internet-gateways --filters $T --query 'InternetGateways[].InternetGatewayId' --output text"
-check "no security group tagged lab=terraform-vpc-clippy" empty "aws ec2 describe-security-groups --filters $T --query 'SecurityGroups[].GroupId' --output text"
-check "no Elastic IP tagged lab=terraform-vpc-clippy" empty "aws ec2 describe-addresses --filters $T --query 'Addresses[].PublicIp' --output text"
+STUDENT=$(bash "$(dirname "$0")/.lab/handle.sh") || exit 1
+echo "Your handle: $STUDENT"
+T="Name=tag:lab,Values=terraform-vpc-clippy Name=tag:student,Values=$STUDENT"
+check "no running EC2 instance tagged lab=terraform-vpc-clippy and student=$STUDENT" empty "aws ec2 describe-instances --filters $T Name=instance-state-name,Values=pending,running,stopping,stopped --query 'Reservations[].Instances[].InstanceId' --output text"
+check "no VPC tagged lab=terraform-vpc-clippy and student=$STUDENT" empty "aws ec2 describe-vpcs --filters $T --query 'Vpcs[].VpcId' --output text"
+check "no internet gateway tagged lab=terraform-vpc-clippy and student=$STUDENT" empty "aws ec2 describe-internet-gateways --filters $T --query 'InternetGateways[].InternetGatewayId' --output text"
+check "no security group tagged lab=terraform-vpc-clippy and student=$STUDENT" empty "aws ec2 describe-security-groups --filters $T --query 'SecurityGroups[].GroupId' --output text"
+check "no Elastic IP tagged lab=terraform-vpc-clippy and student=$STUDENT" empty "aws ec2 describe-addresses --filters $T --query 'Addresses[].PublicIp' --output text"
 echo
 if [ "$failn" -eq 0 ]; then echo "TEARDOWN VERIFIED ($pass/$pass) in account $ACCOUNT"; else echo "NOT CLEAN: $failn leftover(s). Remove them and run this again."; fi
 exit "$failn"
