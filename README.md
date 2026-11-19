@@ -3,7 +3,7 @@
 | | |
 |-|-|
 | **Time** | 90-105 min |
-| **Cost** | free tier, a few cents |
+| **Cost** | a few cents (destroy it when you finish) |
 | **You need** | An AWS administrator user (the IAM lab), the AWS CLI v2, Terraform 1.10 or newer, git and a terminal, and curl |
 
 ## How this lab works
